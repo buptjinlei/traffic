@@ -83,7 +83,7 @@ def common_attribute(pkt):
         dstport = -1
     ret = [src,srcport,dst,dstport]
     return ret
-
+'''
 cap = ps.FileCapture("2015-10-23_capture-win8_Zusy_Variant.pcap")
 print('building pktlist')
 pktlist = []
@@ -114,3 +114,4 @@ for i in length:
 of=open("/home/cv/jl/test.json","w")
 json.dump(length,of)
 of.close()
+'''
