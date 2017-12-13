@@ -1,5 +1,8 @@
 *.pcap
+<<<<<<< HEAD
 *.exe
 *.txt
 *.csv
 *.json
+=======
+>>>>>>> 7af197b21d9ffb2076c9b29b5b872c3ace251e11
