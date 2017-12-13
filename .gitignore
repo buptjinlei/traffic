@@ -1,0 +1,5 @@
+*.pcap
+*.exe
+*.txt
+*.csv
+*.json
