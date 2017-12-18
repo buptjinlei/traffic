@@ -24,21 +24,21 @@ def burst2flow(burst):
         isdsd = common_attribute(pkt)
         tuple_=tuple(isdsd)
         if tuple_ in dict_ :                       
-	    dict_[tuple_].append(pkt)
+            dict_[tuple_].append(pkt)
         else:
             dict_[tuple_]=[pkt]  
     l=[]
     for i in dict_:
-	if i not in l and i!=tuple([-1,-1,-1,-1]):
-		tmp=[]
-		tmp.append(dict_[i])
-		index=tuple([i[2],i[3],i[0],i[1]])
-		try:
-			tmp.append(dict_[index])
-		except:
-			tmp.append([])
-		l.append(index)
-		flow_list.append(tmp)	  
+        if i not in l and i!=tuple([-1,-1,-1,-1]):
+            tmp=[]
+            tmp.append(dict_[i])
+            index=tuple([i[2],i[3],i[0],i[1]])
+            try:
+                tmp.append(dict_[index])
+            except:
+                tmp.append([])
+            l.append(index)
+            flow_list.append(tmp) 
     return flow_list
 
 # cap->flow 
@@ -84,35 +84,32 @@ def common_attribute(pkt):
     ret = [src,srcport,dst,dstport]
     return ret
 
-'''
-cap = ps.FileCapture("2015-10-23_capture-win8_Zusy_Variant.pcap")
-print('building pktlist')
-pktlist = []
-for pkt in cap:
-    pktlist.append(pkt)
-print(len(pktlist))
-print('building bust')
-xx = get_burst(pktlist,2000)
-print(len(xx))
-print("building flow")
-ret=get_flow(xx)
-length=[]
-for j in range(len(xx)):   
-    for i in range(len(ret[j])):
-        #print("burst ",j,"flow ",i,"is ",len(ret[j][i]),(ret[j][i]))
-	l=[]
-	for item in ret[j][i]:
-		tmp=[]
-		for k in item:
-			tmp.append(float(k.length))
-		l.append(tmp)
-	if len(l[0])>6 or len(l[1])>6:
-		length.append(l)
-print(len(length))
-for i in length:
-	print(len(i[0]))
-	print(len(i[1]))
-of=open("/home/cv/jl/test.json","w")
-json.dump(length,of)
-of.close()
-'''
+def get_future(flowinburst):
+    length_=[]
+    burst_features =[]
+    flow_features = []
+    for j in range(len(flowinburst)):    # traversal burst
+        for i in range(len(flowinburst[j])):  #traversal flow
+            #print("burst ",j,"flow ",i,"is ",len(ret[j][i]),(ret[j][i]))
+            l=[]
+            #print("i is ",i)    # every flow contains two parts in and com 
+            for item in flowinburst[j][i]:  # incoming and coming  one item has 
+                #print("item is:",item)
+                #print("The len ",len(flowinburst[j][i]))
+                tmp=[]
+                for k in item:      # in  or com
+                    tmp.append(float(k.length))
+                l.append(tmp)       # a flow's all length
+                
+            if len(l[0])>6 or len(l[1])>6:  # 6 packets
+                l.append(l[0]+l[1])    #l[2] is total
+                #print("len l is :",len(l))
+                length_.append(l)       # a burst's all length
+                for flow_length in l:
+                    flow_features.append(fe.features(flow_length))
+        burst_features.append(flow_features)
+    return length_,burst_features
+def to_json(burst_features):
+    of=open("feature.json","w")
+    json.dump(burst_features,of)
+    of.close()

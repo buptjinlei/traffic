@@ -49,7 +49,7 @@ def variance(l):
         return 0
     l=np.array(l)  
     ret=np.cov(l)
-    return ret
+    return float(ret)
 
 def myskew(l):
     if len(l)==0:
